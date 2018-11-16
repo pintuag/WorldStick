@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.stickerworld.stickers">
+
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/stickermakerlogo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/stickermakerlogo"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme"
+        tools:node="replace">
+
+        <activity
+            android:name="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackListActivity"
+            android:label="@string/title_activity_sticker_packs_list"
+            android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <data android:mimeType="*/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackDetailsActivity"
+            android:parentActivityName="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackListActivity"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackListActivity" />
+        </activity>
+        <activity
+            android:name="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackInfoActivity"
+            android:label="@string/title_activity_sticker_pack_info"
+            android:parentActivityName="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackDetailsActivity"
+            tools:ignore="UnusedAttribute">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stickerworld.stickers.WhatsAppBasedCode.StickerPackDetailsActivity" />
+        </activity>
+
+
+        <provider
+            android:name="com.stickerworld.stickers.WhatsAppBasedCode.StickerContentProvider"
+            android:authorities="${contentProviderAuthority}"
+            android:enabled="true"
+            android:exported="true"
+            android:readPermission="com.whatsapp.sticker.READ">
+        </provider>
+    </application>
+
+</manifest>
