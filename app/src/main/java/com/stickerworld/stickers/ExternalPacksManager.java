@@ -24,8 +24,6 @@ public class ExternalPacksManager {
                         +"/"+id+".zip")
         );
 
-        Uri noticeImage = Uri.parse(MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.stickerpacknotice), null, null));
 
         Intent share = new Intent();
         share.setAction(Intent.ACTION_SEND_MULTIPLE);
