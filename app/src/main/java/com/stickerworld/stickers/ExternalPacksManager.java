@@ -33,7 +33,6 @@ public class ExternalPacksManager {
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
         ArrayList<Uri> files = new ArrayList<Uri>();
-        files.add(noticeImage);
         files.add(uri);
 
         //share.putExtra(Intent.EXTRA_STREAM, uri);

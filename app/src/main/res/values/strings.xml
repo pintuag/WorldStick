@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sticker World</string>
+    <string name="app_name">Custom WhatsApp Stickers</string>
     <string name="action_settings">Settings</string>
     <string name="tray_image_content_description">Sticker Pack Tray Image</string>
     <string name="more_info_button">More info about sticker pack</string>
@@ -8,7 +8,7 @@
     <string name="delete_pack">Delete Pack</string>
     <string name="add_button_content_description">Add sticker pack to WhatsApp</string>
     <string name="share_button_content_description">Share sticker pack to other users</string>
-    <string name="title_activity_sticker_packs_list">Sticker World</string>
+    <string name="title_activity_sticker_packs_list">Custom WhatsApp Stickers</string>
     <string name="dot">•</string>
     <string name="title_activity_sticker_pack_details_single_pack">Sticker Pack</string>
     <string name="title_activity_sticker_pack_details_multiple_pack">Sticker details</string>

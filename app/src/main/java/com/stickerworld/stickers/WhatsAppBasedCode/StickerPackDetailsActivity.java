@@ -77,8 +77,6 @@ public class StickerPackDetailsActivity extends BaseActivity {
     private View divider;
     private WhiteListCheckAsyncTask whiteListCheckAsyncTask;
     private FrameLayout shareButton;
-    private FrameLayout deleteButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +108,6 @@ public class StickerPackDetailsActivity extends BaseActivity {
 
         addButton = findViewById(R.id.add_to_whatsapp_button);
         shareButton = findViewById(R.id.share_pack_button);
-        deleteButton = findViewById(R.id.delete_pack_button);
         alreadyAddedText = findViewById(R.id.already_added_text);
         layoutManager = new GridLayoutManager(this, 1);
         recyclerView = findViewById(R.id.sticker_list);
@@ -156,34 +153,6 @@ public class StickerPackDetailsActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 DataArchiver.createZipFileFromStickerPack(stickerPack, StickerPackDetailsActivity.this);
-            }
-        });
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(StickerPackDetailsActivity.this)
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                                StickerBook.deleteStickerPackById(stickerPack.getIdentifier());
-                                finish();
-                                Intent intent = new Intent(StickerPackDetailsActivity.this, StickerPackListActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                Toast.makeText(StickerPackDetailsActivity.this, "Sticker Pack deleted", Toast.LENGTH_SHORT).show();
-                            }
-                        }).create();
-                alertDialog.setTitle("Are you sure?");
-                alertDialog.setMessage("Deleting this package will also remove it from your WhatsApp app.");
-                alertDialog.show();
             }
         });
 
