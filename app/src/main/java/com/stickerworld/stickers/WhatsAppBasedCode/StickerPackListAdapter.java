@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.stickerworld.stickers.DataArchiver;
 import com.stickerworld.stickers.R;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.GlobalFunctions;
 
 import java.util.List;
 
@@ -55,9 +56,12 @@ public class StickerPackListAdapter extends RecyclerView.Adapter<StickerPackList
 
         viewHolder.titleView.setText(pack.name);
         viewHolder.container.setOnClickListener(view -> {
+
+            GlobalFunctions.setPackdata(pack.identifier);
+            GlobalFunctions.setButtonstatus(true);
+            GlobalFunctions.setIsnewly(true);
+
             Intent intent = new Intent(view.getContext(), StickerPackDetailsActivity.class);
-            intent.putExtra(StickerPackDetailsActivity.EXTRA_SHOW_UP_BUTTON, true);
-            intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_DATA, pack.identifier);
             view.getContext().startActivity(intent);
         });
         viewHolder.imageRowView.removeAllViews();

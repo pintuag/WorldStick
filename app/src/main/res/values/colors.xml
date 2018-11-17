@@ -9,5 +9,6 @@
     <color name="lightBlue">#4286f4</color>
     <color name="darkBlue">#3065ba</color>
     <color name="lightRed">#f44141</color>
+    <color name="trans">#0000ffff</color>
     <color name="darkRed">#cc3939</color>
 </resources>

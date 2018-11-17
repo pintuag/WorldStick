@@ -12,12 +12,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,7 +40,11 @@ import com.stickerworld.stickers.BuildConfig;
 import com.stickerworld.stickers.DataArchiver;
 import com.stickerworld.stickers.R;
 import com.stickerworld.stickers.StickerBook;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.GlobalFunctions;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.ImageViewActivity;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.ImageViewFragment;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
@@ -48,6 +58,7 @@ public class StickerPackDetailsActivity extends BaseActivity {
     public static final String EXTRA_STICKER_PACK_NAME = "sticker_pack_name";
 
     public static final int ADD_PACK = 200;
+    private final static int MY_PERMISSIONS_REQUEST_CODE_FOR_GALLERY = 3000;
     public static final String EXTRA_STICKER_PACK_WEBSITE = "sticker_pack_website";
     public static final String EXTRA_STICKER_PACK_EMAIL = "sticker_pack_email";
     public static final String EXTRA_STICKER_PACK_PRIVACY_POLICY = "sticker_pack_privacy_policy";
@@ -73,11 +84,29 @@ public class StickerPackDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sticker_pack_details);
 
-        boolean showUpButton = getIntent().getBooleanExtra(EXTRA_SHOW_UP_BUTTON, false);
-        stickerPack = StickerBook.getStickerPackById(getIntent().getStringExtra(EXTRA_STICKER_PACK_DATA));
+
+
+        boolean showUpButton = GlobalFunctions.buttonstatus;
+        stickerPack = StickerBook.getStickerPackById(GlobalFunctions.packdata);
         TextView packNameTextView = findViewById(R.id.pack_name);
         TextView packPublisherTextView = findViewById(R.id.author);
         ImageView packTrayIcon = findViewById(R.id.tray_image);
+        if(GlobalFunctions.getImageviewindex()==2){
+
+            GlobalFunctions.setImageviewindex(0);
+            Bundle extras = getIntent().getExtras();
+            assert extras != null;
+            byte[] byteArray = extras.getByteArray("imagebyte");
+            assert byteArray != null;
+            Log.e("Bytearray"," jkkhh "+byteArray.length);
+            Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            Uri uri = getImageUri(this,bmp);
+            Log.e("Bytearraywithuri"," jkkhh "+uri);
+            if(stickerPack!=null)
+            stickerPack.addSticker(uri, this);
+            finish();
+            startActivity(getIntent());
+        }
 
         addButton = findViewById(R.id.add_to_whatsapp_button);
         shareButton = findViewById(R.id.share_pack_button);
@@ -157,10 +186,18 @@ public class StickerPackDetailsActivity extends BaseActivity {
                 alertDialog.show();
             }
         });
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(showUpButton);
             getSupportActionBar().setTitle(showUpButton ? R.string.title_activity_sticker_pack_details_multiple_pack : R.string.title_activity_sticker_pack_details_single_pack);
         }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     private void launchInfoActivity(String publisherWebsite, String publisherEmail, String privacyPolicyWebsite, String trayIconUriString) {
@@ -177,7 +214,7 @@ public class StickerPackDetailsActivity extends BaseActivity {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         i.setType("image/*");
-        startActivityForResult(i, 3000);
+        startActivityForResult(i, MY_PERMISSIONS_REQUEST_CODE_FOR_GALLERY);
     }
 
     @Override
@@ -232,25 +269,24 @@ public class StickerPackDetailsActivity extends BaseActivity {
                     Log.e(TAG, "Validation failed:" + validationError);
                 }
             }
-        } else if(requestCode == 3000){
-            if(data!=null){
-                if(data.getClipData()!=null){
-                    ClipData clipData = data.getClipData();
-                    for(int i = 0; i < clipData.getItemCount(); i++)
-                    {
-                        ClipData.Item path = clipData.getItemAt(i);
-                        Uri uri = path.getUri();
-                        getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        stickerPack.addSticker(uri, this);
-                    }
-                } else {
-                    Uri uri = data.getData();
-                    getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    stickerPack.addSticker(uri, this);
-                }
-                finish();
-                startActivity(getIntent());
-            }
+        }else if (data!=null && requestCode==MY_PERMISSIONS_REQUEST_CODE_FOR_GALLERY){
+            Uri uri = data.getData();
+            getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Log.e("URIVALUE"," h "+uri.toString());
+            GlobalFunctions.setImageviewindex(2);
+            Intent intent = new Intent(StickerPackDetailsActivity.this,ImageViewActivity.class);
+            intent.putExtra("uri",uri);
+            startActivity(intent);
+           /* Bundle bundle = new Bundle();
+            bundle.putString("uri",uri.toString());
+            final Fragment fragment = new ImageViewFragment();
+            fragment.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                    android.R.anim.fade_out);
+            fragmentTransaction.replace(R.id.frame, fragment).commit();*/
+            //
         }
     }
 

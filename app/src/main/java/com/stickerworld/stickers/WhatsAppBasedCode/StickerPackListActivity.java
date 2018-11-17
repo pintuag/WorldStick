@@ -52,8 +52,10 @@ import com.stickerworld.stickers.BuildConfig;
 import com.stickerworld.stickers.DataArchiver;
 import com.stickerworld.stickers.R;
 import com.stickerworld.stickers.StickerBook;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.DisplayActivity;
 import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.GlobalFunctions;
 import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.ImageCropedFragment;
+import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.ImageViewActivity;
 import com.stickerworld.stickers.WhatsAppBasedCode.ImageView.ImageViewFragment;
 
 import java.io.ByteArrayOutputStream;
@@ -232,10 +234,14 @@ public class StickerPackListActivity extends BaseActivity {
             }
         } else if (data!=null && requestCode==MY_PERMISSIONS_REQUEST_CODE_FOR_GALLERY){
             Uri uri = data.getData();
-            getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(Objects.requireNonNull(uri),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Log.e("URIVALUE"," h "+uri.toString());
             GlobalFunctions.setImageviewindex(1);
-            Bundle bundle = new Bundle();
+            Intent intent = new Intent(StickerPackListActivity.this,ImageViewActivity.class);
+            intent.putExtra("uri",uri);
+            startActivity(intent);
+           /* Bundle bundle = new Bundle();
             bundle.putString("uri",uri.toString());
             final Fragment fragment = new ImageViewFragment();
             fragment.setArguments(bundle);
@@ -243,7 +249,7 @@ public class StickerPackListActivity extends BaseActivity {
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                     android.R.anim.fade_out);
-            fragmentTransaction.replace(R.id.frame, fragment).commit();
+            fragmentTransaction.replace(R.id.frame, fragment).commit();*/
             //
         }
     }
@@ -427,11 +433,15 @@ public class StickerPackListActivity extends BaseActivity {
                 this);
         StickerBook.addStickerPackExisting(sp);
 
-        Intent intent = new Intent(this, StickerPackDetailsActivity.class);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_SHOW_UP_BUTTON, true);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_DATA, newId);
-        intent.putExtra("isNewlyCreated", true);
-        this.startActivity(intent);
+        GlobalFunctions.setPackdata(newId);
+        GlobalFunctions.setButtonstatus(true);
+        GlobalFunctions.setIsnewly(true);
+
+        Intent intent = new Intent(StickerPackListActivity.this, StickerPackDetailsActivity.class);
+       /* intent.putExtra(StickerPackDetailsActivity.EXTRA_SHOW_UP_BUTTON, true);
+        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_DATA, newId);*//*
+        intent.putExtra("isNewlyCreated", true);*/
+        startActivity(intent);
     }
 
     private void openFileTray(String name, String creator) {

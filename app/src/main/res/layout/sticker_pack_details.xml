@@ -32,11 +32,10 @@
             android:layout_marginTop="8dp"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:background="@color/trans"
             android:contentDescription="@string/tray_image_content_description"
-            android:src="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@color/colorAccent"
             android:layout_marginStart="16dp" />
 
         <TextView

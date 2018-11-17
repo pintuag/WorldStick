@@ -54,7 +54,13 @@ public class ImageCropedFragment extends Fragment{
                     Log.e("Bytearray"," j "+byteArray.length);
                     intent.putExtra("imagebyte", byteArray);
                     startActivity(intent);
-                    getActivity().finish();
+                   // getActivity().finish();
+                }else if(GlobalFunctions.getImageviewindex()==2){
+                    Intent intent = new Intent(getActivity(), StickerPackDetailsActivity.class);
+                    Log.e("Bytearray"," j "+byteArray.length);
+                    intent.putExtra("imagebyte", byteArray);
+                    startActivity(intent);
+                   // getActivity().finish();
                 }
             }
         });

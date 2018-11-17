@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:background="#000">
+    tools:background="@color/trans">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sticker_preview"
@@ -13,6 +13,7 @@
         android:layout_gravity="center"
         android:scaleType="centerCrop"
         android:clickable="true"
+        android:background="@color/trans"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         tools:visibility="visible" />
